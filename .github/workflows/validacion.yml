@@ -1,0 +1,33 @@
+name: Validación frontend
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: front
+      - uses: actions/checkout@v7
+        with:
+          repository: 1ASI0657-2620-9199/back
+          ref: main
+          path: back
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: node --check front/app.js
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: back/requirements.txt
+      - run: python -m pip install -r back/requirements.txt
+      - run: python front/scripts/verificar_integracion.py
