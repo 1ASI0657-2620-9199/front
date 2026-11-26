@@ -1,228 +1,99 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Panel financiero de FinanZen para registrar movimientos y consultar el resumen mensual."
-    />
-    <title>FinanZen | Control financiero</title>
-    <link rel="stylesheet" href="/styles.css" />
-    <script src="/app.js" defer></script>
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Navegación principal">
-        <a class="brand" href="#dashboard" aria-label="FinanZen, inicio">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 40 40" role="img">
-              <path d="M9 27c6-1 8-7 9-16 8 4 13 10 13 18" />
-              <path d="M8 31c7-6 15-8 24-6" />
-            </svg>
-          </span>
-          <span>Finan<span>Zen</span></span>
-        </a>
-
-        <nav class="nav-list">
-          <a class="nav-item active" href="#dashboard">
-            <span class="nav-icon">⌂</span><span>Resumen</span>
-          </a>
-          <a class="nav-item" href="#transactions">
-            <span class="nav-icon">↕</span><span>Movimientos</span>
-          </a>
-          <a class="nav-item" href="#analysis">
-            <span class="nav-icon">◔</span><span>Análisis</span>
-          </a>
-          <button class="nav-item nav-button" id="openTransactionButton" type="button">
-            <span class="nav-icon">＋</span><span>Nuevo registro</span>
-          </button>
-        </nav>
-
-        <div class="sidebar-card">
-          <span class="sidebar-card-icon">✦</span>
-          <p>Construye hábitos financieros saludables.</p>
-          <small>Avance funcional · v0.1</small>
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FinanZen: tus movimientos, presupuestos, alertas y consumo en un solo lugar.">
+  <meta name="theme-color" content="#113e31"><title>FinanZen | Control financiero</title>
+  <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M20 8V6a2 2 0 0 0-2-2H6a3 3 0 0 0-3 3v11a2 2 0 0 0 2 2h15V8H6a1 1 0 0 1 0-2"/><path d="M20 12h-5v4h5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="3"/><path d="M10 7h4M11 17h2M3 9v6M21 9v6"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M9 15v-4M14 15V7M19 15v-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 20C4 8 10 4 21 3c-1 11-5 17-16 17ZM5 20 16 9"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#main">Ir al contenido</a>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#dashboard"><span class="brand-mark"><svg class="icon"><use href="#i-leaf"/></svg></span><span>Finan<span>Zen</span></span></a>
+      <p class="nav-label">TU ESPACIO FINANCIERO</p>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#dashboard" data-route="dashboard"><svg class="icon"><use href="#i-grid"/></svg><span>Resumen</span></a>
+        <a class="nav-item" href="#budgets" data-route="budgets"><svg class="icon"><use href="#i-wallet"/></svg><span>Presupuestos</span></a>
+        <a class="nav-item" href="#notifications" data-route="notifications"><svg class="icon"><use href="#i-bell"/></svg><span>Alertas</span><span class="nav-count" id="notificationCount" hidden>0</span></a>
+        <a class="nav-item" href="#devices" data-route="devices"><svg class="icon"><use href="#i-device"/></svg><span>Dispositivos</span></a>
+        <a class="nav-item" href="#reports" data-route="reports"><svg class="icon"><use href="#i-chart"/></svg><span>Reportes</span></a>
+      </nav>
+      <div class="sidebar-note"><svg class="icon"><use href="#i-leaf"/></svg><p>Pequeñas decisiones.<br>Más tranquilidad.</p><span>Haz espacio para tus metas.</span></div>
+      <button class="profile-button" id="profileButton" type="button"><span class="avatar">FZ</span><span><strong>Cuenta demo</strong><small id="userIdLabel">demo-user</small></span></button>
+    </aside>
+    <button class="sidebar-scrim" id="sidebarScrim" aria-label="Cerrar navegación" hidden></button>
+    <main class="main-content" id="main">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobileMenu" type="button" aria-label="Abrir navegación" aria-expanded="false" aria-controls="sidebar"><svg class="icon"><use href="#i-menu"/></svg></button>
+        <div><p class="eyebrow">UN POCO MÁS DE CLARIDAD, CADA DÍA</p><h1 id="pageTitle">Tu resumen financiero</h1></div>
+        <div class="topbar-actions"><label class="month-control"><span>Periodo</span><input id="monthPicker" type="month" required aria-label="Periodo del panel"></label><button class="icon-button" id="refreshButton" type="button" aria-label="Actualizar información"><svg class="icon"><use href="#i-refresh"/></svg></button></div>
+      </header>
+      <div class="service-warning" id="serviceWarning" role="alert" hidden></div>
+      <section data-view="dashboard">
+        <div class="hero"><div><p class="eyebrow light">TU BALANCE DEL MES</p><p class="hero-balance" id="balanceValue">S/ 0.00</p><p class="hero-copy">Cada movimiento cuenta. Tú decides el siguiente.</p></div><button class="primary-button light-button" data-open="transactionDialog"><svg class="icon"><use href="#i-plus"/></svg>Registrar movimiento</button><svg class="hero-art" viewBox="0 0 240 190" aria-hidden="true"><path d="M25 180C20 80 80 20 220 10c-5 130-65 180-195 170Z"/><path d="m25 180 135-115M75 130l-3-50m52 1 45 4"/></svg></div>
+        <div class="summary-grid">
+          <article class="summary-card"><span class="summary-icon income-icon">+</span><div><p>Ingresos</p><strong id="incomeValue">S/ 0.00</strong><small>En el periodo seleccionado</small></div></article>
+          <article class="summary-card"><span class="summary-icon expense-icon">−</span><div><p>Gastos</p><strong id="expenseValue">S/ 0.00</strong><small>Movimientos confirmados</small></div></article>
+          <article class="summary-card"><span class="summary-icon neutral-icon"><svg class="icon"><use href="#i-wallet"/></svg></span><div><p>Presupuesto disponible</p><strong id="availableValue">S/ 0.00</strong><small id="budgetCount">Aún no tienes presupuestos</small></div></article>
         </div>
-      </aside>
-
-      <main class="main-content">
-        <header class="topbar">
-          <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Abrir menú">☰</button>
-          <div>
-            <p class="eyebrow">Panel financiero</p>
-            <h1>Hola, <span id="profileName">usuario</span></h1>
-          </div>
-          <div class="topbar-actions">
-            <label class="month-control">
-              <span>Periodo</span>
-              <input id="monthPicker" type="month" aria-label="Periodo del resumen" />
-            </label>
-            <div class="profile-chip" title="Identidad demostrativa">
-              <span class="avatar">FZ</span>
-              <div>
-                <strong>Cuenta demo</strong>
-                <small id="userIdLabel">demo-user</small>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <section class="hero" id="dashboard">
-          <div>
-            <p class="eyebrow light">Tu balance disponible</p>
-            <p class="hero-balance" id="balanceValue">S/ 0.00</p>
-            <p class="hero-copy">Ingresos menos gastos del periodo seleccionado.</p>
-          </div>
-          <button class="primary-button light-button" id="heroTransactionButton" type="button">
-            <span>＋</span> Registrar movimiento
-          </button>
-          <span class="hero-orb orb-one" aria-hidden="true"></span>
-          <span class="hero-orb orb-two" aria-hidden="true"></span>
-        </section>
-
-        <section class="summary-grid" aria-label="Resumen del mes">
-          <article class="summary-card">
-            <div class="summary-icon income-icon">↗</div>
-            <div>
-              <p>Ingresos</p>
-              <strong id="incomeValue">S/ 0.00</strong>
-              <small>Durante el periodo</small>
-            </div>
-          </article>
-          <article class="summary-card">
-            <div class="summary-icon expense-icon">↘</div>
-            <div>
-              <p>Gastos</p>
-              <strong id="expenseValue">S/ 0.00</strong>
-              <small>Durante el periodo</small>
-            </div>
-          </article>
-          <article class="summary-card">
-            <div class="summary-icon movement-icon">↕</div>
-            <div>
-              <p>Movimientos</p>
-              <strong id="movementCount">0</strong>
-              <small>Registros encontrados</small>
-            </div>
-          </article>
-        </section>
-
-        <section class="content-grid">
-          <article class="panel transactions-panel" id="transactions">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">Actividad reciente</p>
-                <h2>Últimos movimientos</h2>
-              </div>
-              <button class="text-button" id="refreshButton" type="button">Actualizar</button>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Descripción</th>
-                    <th>Categoría</th>
-                    <th>Fecha</th>
-                    <th class="align-right">Importe</th>
-                  </tr>
-                </thead>
-                <tbody id="transactionRows"></tbody>
-              </table>
-              <div class="empty-state" id="emptyState">
-                <span>◎</span>
-                <h3>Aún no hay movimientos</h3>
-                <p>Registra un ingreso o gasto para comenzar tu resumen.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel analysis-panel" id="analysis">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">Distribución</p>
-                <h2>Gastos por categoría</h2>
-              </div>
-            </div>
-            <div class="donut-layout">
-              <div class="donut" id="expenseDonut" aria-label="Distribución de gastos">
-                <div>
-                  <small>Total</small>
-                  <strong id="donutTotal">S/ 0</strong>
-                </div>
-              </div>
-              <div class="legend" id="expenseLegend"></div>
-            </div>
-          </article>
-        </section>
-
-        <p class="connection-status" id="connectionStatus" role="status">
-          <span></span> Conectando con el servicio…
-        </p>
-      </main>
-    </div>
-
-    <div class="modal-backdrop" id="transactionModal" hidden>
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-heading">
-          <div>
-            <p class="eyebrow">Nuevo registro</p>
-            <h2 id="modalTitle">Agregar movimiento</h2>
-          </div>
-          <button class="close-button" id="closeModalButton" type="button" aria-label="Cerrar">×</button>
+        <div class="content-grid">
+          <article class="panel transactions-panel" id="transactions"><div class="panel-heading"><div><p class="eyebrow">TU ACTIVIDAD</p><h2>Movimientos del mes <span class="count-label" id="movementCount">0</span></h2></div><label class="sr-only" for="transactionFilter">Filtrar movimientos</label><select class="compact-select" id="transactionFilter"><option value="all">Todos</option><option value="income">Ingresos</option><option value="expense">Gastos</option></select></div><div class="table-wrap"><table><thead><tr><th>Movimiento</th><th>Categoría</th><th>Fecha</th><th class="align-right">Importe</th></tr></thead><tbody id="transactionRows"></tbody></table></div><div class="empty-state" id="emptyState"><svg class="icon"><use href="#i-wallet"/></svg><h3>Tu primer paso empieza aquí</h3><p>Registra un ingreso o gasto para comenzar.</p><button class="text-button" data-open="transactionDialog">Registrar movimiento</button></div></article>
+          <article class="panel analysis-panel"><div class="panel-heading"><div><p class="eyebrow">EN QUÉ SE VA</p><h2>Gastos por categoría</h2></div></div><div class="donut-layout"><div class="donut" id="expenseDonut" role="img" aria-label="Sin gastos"><div><small>Total del mes</small><strong id="donutTotal">S/ 0</strong></div></div><div class="legend" id="expenseLegend"></div></div></article>
         </div>
-
-        <form id="transactionForm">
-          <div class="type-selector" role="group" aria-label="Tipo de movimiento">
-            <label>
-              <input type="radio" name="type" value="income" checked />
-              <span>↗ Ingreso</span>
-            </label>
-            <label>
-              <input type="radio" name="type" value="expense" />
-              <span>↘ Gasto</span>
-            </label>
-          </div>
-
-          <label class="field amount-field">
-            <span>Importe</span>
-            <div><b>S/</b><input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required /></div>
-          </label>
-
-          <div class="form-grid">
-            <label class="field">
-              <span>Categoría</span>
-              <select name="category" required>
-                <option value="salary">Sueldo</option>
-                <option value="sales">Ventas</option>
-                <option value="food">Alimentación</option>
-                <option value="transport">Transporte</option>
-                <option value="services">Servicios</option>
-                <option value="education">Educación</option>
-                <option value="entertainment">Entretenimiento</option>
-                <option value="other">Otros</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Fecha</span>
-              <input name="occurred_at" type="datetime-local" required />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Descripción</span>
-            <input name="description" type="text" maxlength="240" placeholder="Ej. compra semanal" />
-          </label>
-
-          <input name="account_id" type="hidden" value="cash-account" />
-          <p class="form-message" id="formMessage" role="alert"></p>
-
-          <div class="modal-actions">
-            <button class="secondary-button" id="cancelButton" type="button">Cancelar</button>
-            <button class="primary-button" id="submitButton" type="submit">Guardar movimiento</button>
-          </div>
-        </form>
+        <article class="panel overview-budgets"><div class="panel-heading"><div><p class="eyebrow">A TU RITMO</p><h2>Así van tus presupuestos</h2></div><a class="text-button" href="#budgets">Ver presupuestos</a></div><div id="budgetOverview" class="budget-overview"></div></article>
       </section>
-    </div>
-  </body>
+      <section data-view="budgets" hidden>
+        <div class="section-heading"><div><h2>Un plan para lo que importa</h2><p>Define tus límites mensuales y sigue tu avance por categoría.</p></div><button class="primary-button" id="newBudgetButton"><svg class="icon"><use href="#i-plus"/></svg>Crear presupuesto</button></div>
+        <div class="budget-grid" id="budgetCards"></div>
+        <article class="panel recommendation-panel"><div><span class="tag">BASADO EN TUS HÁBITOS</span><h2>Un punto de partida para tu presupuesto</h2><p>Usamos tus ingresos y gastos de los tres meses anteriores y reservamos un 20 % para ahorro.</p></div><button class="secondary-button" id="recommendButton">Ver recomendación</button><div id="recommendation" class="recommendation-result" hidden></div></article>
+      </section>
+      <section data-view="notifications" hidden>
+        <div class="section-heading"><div><h2>Lo importante, a tiempo</h2><p>Avisos de presupuesto y consumo, reunidos en tu bandeja.</p></div><button class="secondary-button" id="preferencesButton">Preferencias</button></div>
+        <div class="filter-tabs" role="group" aria-label="Filtrar alertas"><button class="filter-tab active" data-notification-filter="all">Todas</button><button class="filter-tab" data-notification-filter="unread">Sin leer</button><button class="filter-tab" data-notification-filter="failed">Con problemas de entrega</button></div><div id="notificationList" class="notification-list"></div>
+      </section>
+      <section data-view="devices" hidden>
+        <div class="section-heading"><div><h2>Entiende tu consumo</h2><p>Conecta un medidor y descubre cómo cambia tu consumo.</p></div><button class="primary-button" id="newDeviceButton"><svg class="icon"><use href="#i-plus"/></svg>Agregar dispositivo</button></div>
+        <div class="info-note"><svg class="icon"><use href="#i-leaf"/></svg><p>Los costos de consumo son estimaciones. Las lecturas no se registran como gastos ni cambian tu balance financiero.</p></div><div id="deviceCards" class="device-grid"></div>
+        <article id="telemetryPanel" class="panel telemetry-panel" hidden>
+          <div class="panel-heading"><div><p class="eyebrow">CONSUMO DEL MES</p><h2 id="telemetryTitle">Lecturas</h2></div><div class="button-row"><button class="secondary-button" id="repeatReadingButton" hidden>Reenviar última lectura</button><button class="primary-button" id="simulateButton">Simular lectura</button></div></div><div class="telemetry-summary" id="telemetrySummary"></div><div class="chart-area" id="consumptionChart"></div>
+          <div class="panel-heading"><h3>Últimas lecturas</h3><span class="muted">Ordenadas por fecha de medición · máximo 100</span></div><div class="table-wrap"><table><thead><tr><th>Medición</th><th>Consumo</th><th>Costo estimado</th><th>Origen</th></tr></thead><tbody id="readingRows"></tbody></table></div><p id="readingEmpty" class="inline-empty" hidden>Aún no hay lecturas en este periodo.</p>
+        </article>
+      </section>
+      <section data-view="reports" hidden><div class="section-heading"><div><h2>Una pausa para mirar tu semana</h2><p>Revisa tus movimientos y el estado de tus presupuestos.</p></div><label class="date-control"><span>Fecha de la semana</span><input id="weekPicker" type="date" required></label></div><div id="weeklyReport"></div></section>
+      <footer class="footer"><p class="connection-status" id="connectionStatus" role="status">Conectando con tus datos…</p><span>FinanZen · Identidad de demostración</span></footer>
+    </main>
+  </div>
+  <dialog id="transactionDialog" aria-labelledby="transactionTitle"><form id="transactionForm">
+    <div class="modal-heading"><div><p class="eyebrow">PASO A PASO</p><h2 id="transactionTitle">Registrar movimiento</h2></div><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div class="type-selector"><label><input type="radio" name="type" value="income" checked><span>Ingreso</span></label><label><input type="radio" name="type" value="expense"><span>Gasto</span></label></div>
+    <label class="field"><span>Importe en soles</span><input name="amount" type="number" min="0.01" max="999999999999.99" step="0.01" placeholder="0.00" required></label><div class="form-grid"><label class="field"><span>Categoría</span><select name="category" data-categories required></select></label><label class="field"><span>Fecha y hora</span><input name="occurred_at" type="datetime-local" required></label></div><label class="field"><span>Descripción <span class="optional">(opcional)</span></span><input name="description" type="text" maxlength="240" placeholder="Ej. Compra de la semana"></label><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Guardar movimiento</button></div>
+  </form></dialog>
+  <dialog id="budgetDialog" aria-labelledby="budgetTitle"><form id="budgetForm">
+    <div class="modal-heading"><div><p class="eyebrow">DALE UN DESTINO A TU DINERO</p><h2 id="budgetTitle">Crear presupuesto</h2></div><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div><label class="field"><span>Categoría</span><select name="category" data-expense-categories required></select></label><div class="form-grid"><label class="field"><span>Límite mensual en soles</span><input name="limit_amount" type="number" min="0.01" max="999999999999.99" step="0.01" required placeholder="500.00"></label><label class="field"><span>Avisarme al alcanzar</span><select name="alert_threshold"><option value="50">50 % del límite</option><option value="75">75 % del límite</option><option value="80" selected>80 % del límite</option><option value="90">90 % del límite</option><option value="100">100 % del límite</option></select></label></div><p class="help-text" id="budgetPeriod"></p><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Guardar presupuesto</button></div>
+  </form></dialog>
+  <dialog id="deviceDialog" aria-labelledby="deviceTitle"><form id="deviceForm">
+    <div class="modal-heading"><div><p class="eyebrow">CONSUMO CON CONTEXTO</p><h2 id="deviceTitle">Agregar dispositivo</h2></div><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div><label class="field"><span>Nombre del dispositivo</span><input name="name" maxlength="80" required placeholder="Ej. Medidor de casa"></label><label class="field"><span>Tipo de conexión</span><select name="source"><option value="simulator">Medidor simulado</option><option value="meter_v1">Medidor compatible Meter V1</option></select></label><div class="form-grid"><label class="field"><span>Límite mensual en kWh</span><input name="monthly_limit_kwh" type="number" min="0.001" max="99999999999" step="0.001" value="100" required></label><label class="field"><span>Tarifa en S/ por kWh</span><input name="tariff_per_kwh" type="number" min="0" max="999999" step="0.0001" value="0.75" required></label></div><p class="help-text">El simulador permite enviar lecturas desde el panel. Meter V1 recibe lecturas a través de su API.</p><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Guardar dispositivo</button></div>
+  </form></dialog>
+  <dialog id="readingDialog" aria-labelledby="readingTitle"><form id="readingForm">
+    <div class="modal-heading"><div><p class="eyebrow">SIMULADOR DE CONSUMO</p><h2 id="readingTitle">Enviar una lectura</h2></div><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="help-text" id="readingDeviceName"></p><div class="form-grid"><label class="field"><span>Consumo del intervalo</span><input name="value" type="number" min="0" max="9999999999" step="0.000001" value="10" required></label><label class="field"><span>Unidad</span><select name="unit"><option value="kWh">kWh</option><option value="Wh">Wh</option></select></label></div><p class="help-text">Cada envío agrega el consumo de un intervalo. No envíes el valor acumulado del medidor.</p><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Enviar lectura</button></div>
+  </form></dialog>
+  <dialog id="preferencesDialog" aria-labelledby="preferencesTitle"><form id="preferencesForm">
+    <div class="modal-heading"><h2 id="preferencesTitle">Tus preferencias de alertas</h2><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div><label class="check-field"><input name="budget_enabled" type="checkbox" checked><span><strong>Presupuestos</strong><small>Avisos al acercarte al límite o alcanzarlo.</small></span></label><label class="check-field"><input name="device_enabled" type="checkbox" checked><span><strong>Consumo de dispositivos</strong><small>Avisos al alcanzar el límite mensual de energía.</small></span></label><p class="help-text">Los cambios se aplican a los eventos que se procesen desde ahora. Las alertas anteriores se conservan.</p><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Guardar preferencias</button></div>
+  </form></dialog>
+  <dialog id="profileDialog" aria-labelledby="profileTitle"><form id="profileForm"><div class="modal-heading"><h2 id="profileTitle">Cambiar identidad demo</h2><button type="button" class="icon-button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="help-text">Cada identificador tiene datos separados. Este selector es para demostración y no sustituye un inicio de sesión.</p><label class="field"><span>Identificador</span><input name="user_id" required minlength="1" maxlength="80" pattern=".*\S.*" autocomplete="off" value="demo-user"></label><p class="form-message" role="alert"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close>Cancelar</button><button type="submit" class="primary-button">Cambiar cuenta demo</button></div></form></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
 </html>
